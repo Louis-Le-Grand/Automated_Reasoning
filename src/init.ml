@@ -12,6 +12,6 @@ then (Topdirs.dir_directory "+camlp5";
 else (Topdirs.dir_load Format.std_formatter "camlp4o.cma");;
 
 type dummy_interactive = START_INTERACTIVE | END_INTERACTIVE;;
-#use "initialization.ml";;
-#use "Quotexpander.ml";;
-#use "atp_interactive.ml";;
+#use "src/initialization.ml";;
+#use "src/Quotexpander.ml";;
+#use "src/atp_interactive.ml";;
