@@ -66,7 +66,7 @@ let rec makeProp n i =
   0 -> failwith "n must be greater than 0"
   | 1 -> i
   | n when n mod 2 = 0 -> makePropStepNot (makeProp (n - 1) i)
-  | n -> makePropStep (sublistsTwo (makeProp ((n - 1)/2 ) i));;
+  | n -> makePropStep (sublistsTwo (makeProp ((n - 1)/2 ) i)) @ makePropStepNot (makeProp (n - 1) i);;
 
 
   (*Testfall*)
