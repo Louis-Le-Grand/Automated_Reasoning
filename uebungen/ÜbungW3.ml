@@ -40,13 +40,18 @@ let rec atomizer k =
   | n -> [Atom(P(string_of_int n))] @ (atomizer (n-1));;
 
 
-let rec makeProp n =
+let rec makeProp n i =
   match n with
   0 -> []
-  | n -> (makeProp (n-1)) @ (List.map (fun x -> (And(x, (List.nth (atomizer n) 0)))) (atomizer (n-1))) @ (List.map (fun x -> (Or(x, (List.nth (atomizer n) 0)))) (atomizer (n-1))) @ (List.map (fun x -> (Imp(x, (List.nth (atomizer n) 0)))) (atomizer (n-1))) @ (List.map (fun x -> (Iff(x, (List.nth (atomizer n) 0)))) (atomizer (n-1)));;
+  | n -> (makePropStep i) @ (makeProp (n-1) i);;
 
+let rec makePropStep i =
+  match i with
+  [] -> []
+  | atom::rest -> [And(atom, atom)] @ [Or(atom, atom)] @ [Not(atom)] @ [Imp(atom, atom)] @ [Iff(atom, atom)] @ (makePropStep rest);;
+  (*| n -> [And(i, i)] @ [Or(i, i)] @ [Not(i)] @ [Imp(i, i)] @ [Iff(i, i)] @ [Forall(P(string_of_int n), i)] @ [Exists(P(string_of_int n), i)] @ (makeProp (n-1) i);;*)
 
-(*Testfall*)
+  (*Testfall*)
 let props = makeProp 3 (atomizer 3);;
 
 (*
