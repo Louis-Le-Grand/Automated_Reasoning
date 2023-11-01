@@ -39,17 +39,35 @@ let rec atomizer k =
   0 -> [True;False]
   | n -> [Atom(P(string_of_int n))] @ (atomizer (n-1));;
 
+let rec listFirst = function
+  [] -> failwith "Empty List"
+  | x::xs -> x;;
 
-let rec makeProp n i =
-  match n with
-  0 -> []
-  | n -> (makePropStep i) @ (makeProp (n-1) i);;
+let rec listSecond = function
+  [] -> failwith "Empty List"
+  | x::xs -> listFirst xs;;
+
+let rec sublistsTwo = function
+  [] -> []
+  | x::xs -> (List.map (fun y -> [x;y]) xs) @ [[x;x]] @ (sublistsTwo xs);;
 
 let rec makePropStep i =
   match i with
   [] -> []
-  | atom::rest -> [And(atom, atom)] @ [Or(atom, atom)] @ [Not(atom)] @ [Imp(atom, atom)] @ [Iff(atom, atom)] @ (makePropStep rest);;
-  (*| n -> [And(i, i)] @ [Or(i, i)] @ [Not(i)] @ [Imp(i, i)] @ [Iff(i, i)] @ [Forall(P(string_of_int n), i)] @ [Exists(P(string_of_int n), i)] @ (makeProp (n-1) i);;*)
+  | fm::rest -> [And(listFirst fm, listSecond fm)] @ [Or(listFirst fm, listSecond fm)] @ [Imp(listFirst fm, listSecond fm)] @ [Iff(listFirst fm, listSecond fm)] @ (makePropStep rest);;
+
+let rec makePropStepNot i =
+  match i with
+  [] -> []
+  | fm::rest -> [Not(fm)] @ (makePropStepNot rest);;
+
+let rec makeProp n i =
+  match n with
+  0 -> failwith "n must be greater than 0"
+  | 1 -> i
+  | n when n mod 2 = 0 -> makePropStepNot (makeProp (n - 1) i)
+  | n -> makePropStep (sublistsTwo (makeProp ((n - 1)/2 ) i));;
+
 
   (*Testfall*)
 let props = makeProp 3 (atomizer 3);;
