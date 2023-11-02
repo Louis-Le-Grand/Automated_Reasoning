@@ -1,0 +1,11 @@
+# VSCode
+.DS_Store
+.vscode
+
+# OCaml
+*.cmo
+*.cmi
+*.cmx
+*.o
+*.out
+
