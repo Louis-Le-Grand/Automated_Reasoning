@@ -1,12 +1,14 @@
+
+(*Vor dem Ausführen den Programms #use "init.ml";; schreiben
+   Wenn du nicht das komplette Programm ausführen willst, sondern nur die Funktionen im Toplevel
+   ausrufen möhtest, musst du vorher let default_parser = parse_prop_formula;; schreiben*)
+#use "src/inint.ml";;
+
 let default_parser = parse_prop_formula;;
 
 (*Aufgabe: Modifiziere den untenstehenden Code für den (rekursiven) Davis-Putnam-Logemann-Loveland-Algorithmus so, 
   dass bei Erfüllbarkeit auch eine gültige Variablenbelegung ausgegeben wird. Versuche die Ausgabe auch gut lesbar zu gestalten. 
   Unten findest du Beispiele zum Testen*)
-
-(*Vor dem Ausführen den Programms #use "init.ml";; schreiben
-   Wenn du nicht das komplette Programm ausführen willst, sondern nur die Funktionen im Toplevel
-   ausrufen möhtest, musst du vorher let default_parser = parse_prop_formula;; schreiben*)
 
 let one_literal_rule_assignment clauses =
   let u = hd (find (fun cl -> length cl = 1) clauses) in
