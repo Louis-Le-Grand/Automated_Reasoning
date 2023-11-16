@@ -16,7 +16,7 @@ let one_literal_rule_assignment clauses assignment =
   let u' = negate u in
   let clauses1 = filter (fun cl -> not (mem u cl)) clauses in
   let new_clauses = image (fun cl -> subtract cl [u']) clauses1 in
-  new_clauses and new_assignment;;
+  new_clauses, new_assignment;;
 
 let affirmative_negative_rule_assignment clauses assignment =
   let neg',pos = partition negative (unions clauses) in
