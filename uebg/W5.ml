@@ -1,3 +1,5 @@
+(* Code von Johannes Folltmann, Simon Korswird und Ludwig Monnerjahn *)
+
 (*Vor dem Ausführen den Programms #use "init.ml";; schreiben
    Wenn du nicht das komplette Programm ausführen willst, sondern nur die Funktionen im Toplevel
    ausrufen möhtest, musst du vorher let default_parser = parse_prop_formula;; schreiben*)
@@ -31,13 +33,6 @@ let posneg_count cls l =
   and n = length(filter (mem (negate l)) cls) in
   m + n;;                                  
 
-let rec dpll_assignment clauses assignment =       
-  if clauses = [] then true else if mem [] clauses then false else
-  try dpll_assignment(one_literal_rule_assignment clauses assignment) with Failure _ ->
-  try dpll_assignment(affirmative_negative_rule_assignment clauses assignment) with Failure _ ->
-  let pvs = filter positive (unions clauses) in
-  let p = maximize (posneg_count clauses) pvs in
-  dpll_assignment (insert [p] clauses) assignment or dpll_assignment (insert [negate p] clauses) assignment;;
 
 let rec dpll_assignment clauses assignment =
   if clauses = [] then true, assignment
@@ -55,12 +50,9 @@ let rec dpll_assignment clauses assignment =
         let p = maximize (posneg_count clauses) pvs in
         let true_branch, true_assignment = dpll_assignment (insert [p] clauses) (assignment @ [(p, true)]) in
         let false_branch, false_assignment = dpll_assignment (insert [negate p] clauses) (assignment @ [(p, false)]) in
-        true_branch || false_branch, true_assignment @ false_assignment
+        true_branch || false_branch, true_assignment @ false_assignment;;
   
 
-
-
-  
 let ex1 = defcnfs <<(a \/ b) /\ (a \/ ~c \/ d) /\ (b \/ c \/ ~d) /\ (~a) /\ (a \/ ~d)>>;;
 dpll_assignment ex1 [];;
 
