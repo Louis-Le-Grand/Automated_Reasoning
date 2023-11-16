@@ -53,8 +53,10 @@ let rec dpll_assignment clauses assignment =
       with Failure _ ->
         let pvs = List.filter positive (List.flatten clauses) in
         let p = maximize (posneg_count clauses) pvs in
-        dpll_assignment (insert [p] clauses) (assignment @ [(p, true)])
-        || dpll_assignment (insert [negate p] clauses) (assignment @ [(p, false)])
+        let true_branch, true_assignment = dpll_assignment (insert [p] clauses) (assignment @ [(p, true)]) in
+        let false_branch, false_assignment = dpll_assignment (insert [negate p] clauses) (assignment @ [(p, false)]) in
+        true_branch || false_branch, true_assignment @ false_assignment
+  
 
 
 
