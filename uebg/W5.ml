@@ -39,7 +39,24 @@ let rec dpll_assignment clauses assignment =
   let p = maximize (posneg_count clauses) pvs in
   dpll_assignment (insert [p] clauses) assignment or dpll_assignment (insert [negate p] clauses) assignment;;
 
+let rec dpll_assignment clauses assignment =
+  if clauses = [] then true
+  else if List.mem [] clauses then false
+  else
+    try
+      let result, _ = one_literal_rule_assignment clauses assignment in
+      dpll_assignment result assignment
+    with Failure _ ->
+      try
+        let result, _ = affirmative_negative_rule_assignment clauses assignment in
+        dpll_assignment result assignment
+      with Failure _ ->
+        let pvs = List.filter positive (List.flatten clauses) in
+        let p = maximize (posneg_count clauses) pvs in
+        dpll_assignment (insert [p] clauses) assignment
+        || dpll_assignment (insert [negate p] clauses) assignment;;
 
+  
 let ex1 = defcnfs <<(a \/ b) /\ (a \/ ~c \/ d) /\ (b \/ c \/ ~d) /\ (~a) /\ (a \/ ~d)>>;;
 dpll_assignment ex1 [];;
 
